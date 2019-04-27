@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txtParkNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Придорожная парковка"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Некрасовский пр." />
+
+        <TextView
+            android:id="@+id/txtPeopleNum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="хотят припарковаться: " />
+
+        <Button
+            android:id="@+id/btn_show_park"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Посмотреть" />
+    </LinearLayout>
+
+
+</LinearLayout>
