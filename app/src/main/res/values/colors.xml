@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#F2F2F2</color>
+    <color name="colorPrimaryDark">#090808</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="startGrad">#FDC06A</color>
+    <color name="endGrad">#DF4717</color>
+    <color name="bottom_sheet_background">#000000</color>
+    <color name="park_color">#F2F2F2</color>
 </resources>

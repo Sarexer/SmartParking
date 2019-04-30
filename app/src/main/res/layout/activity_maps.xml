@@ -21,13 +21,14 @@
 
         <Button
             android:id="@+id/btn_find_near"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="bottom|left"
-            android:layout_marginLeft="10dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/btn_near"
             android:onClick="onClickBtn"
-            />
+            android:text="Парковки рядом"
+            android:textColor="@android:color/white" />
     </FrameLayout>
     <include layout="@layout/bottom_sheet_layout"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

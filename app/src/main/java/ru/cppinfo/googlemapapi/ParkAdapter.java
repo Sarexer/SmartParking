@@ -1,6 +1,7 @@
 package ru.cppinfo.googlemapapi;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +92,7 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
         Button btnStartPark;
         Button btnAnotherPark;
         Button btnShowPark;
+        Button btnBook;
 
 
         ParkPlaceHolder(View itemView) {
@@ -99,6 +102,7 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
             btnStartPark = itemView.findViewById(R.id.btn_start_park);
             btnAnotherPark = itemView.findViewById(R.id.btn_another_park);
             btnShowPark = itemView.findViewById(R.id.btn_show_park);
+            btnBook = itemView.findViewById(R.id.btn_to_book);
 
             if (btnStartPark != null) {
                 btnStartPark.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +155,40 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
                 });
             }
 
+            if(btnBook != null){
+                btnBook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        final Dialog dialog = new Dialog(context);
+                        dialog.setContentView(R.layout.dialog_booking_layout);
+                        dialog.setTitle("Title...");
+
+                        EditText editTextNumber = dialog.findViewById(R.id.etxt_dialog_booking);
+                        Button btnOk = dialog.findViewById(R.id.btn_dialog_booking_ok);
+                        Button btnCancel = dialog.findViewById(R.id.btn_dialog_booking_cancel);
+
+                        btnOk.setOnClickListener(view -> {
+                            String number = editTextNumber.getText().toString();
+                            if(number.trim().isEmpty()){
+                                Toast.makeText(context, "Вы не ввели номер!", Toast.LENGTH_SHORT).show();
+                            }else{
+                                dialog.dismiss();
+                                Toast.makeText(context, "Место забронировано", Toast.LENGTH_SHORT).show();
+                            }
+
+                        });
+                        btnCancel.setOnClickListener(v1 -> {
+                            dialog.dismiss();
+                        });
+                        dialog.show();
+
+                        // set the custom dialog components - text, image and button
+                    }
+                });
+            }
+
             if(btnAnotherPark != null){
                 btnAnotherPark.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -159,14 +197,15 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
                         notifyItemRangeRemoved(0,2);
 
                         placesList.addAll(savePlacesList);
+
                     }
                 });
             }
 
             if(btnShowPark != null){
-                if(placesList.get(1).type == 2){
-                    btnShowPark.setVisibility(View.GONE);
-                }
+
+
+
                 btnShowPark.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -177,9 +216,9 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
                         for (int i =0;i<placesList.size();i++){
                             savePlacesList.add(placesList.get(i));
                         }
-
+                        int size = placesList.size();
                         placesList.clear();
-                        notifyItemRangeRemoved(0,2);
+                        notifyItemRangeRemoved(0,size);
                         placesList.add(place);
                         placesList.add(infopark);
 
@@ -192,6 +231,9 @@ public class ParkAdapter extends RecyclerView.Adapter<ParkAdapter.ParkPlaceHolde
                                 .build();
                         CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
                         map.animateCamera(cameraUpdate);
+
+
+
 
 
                     }

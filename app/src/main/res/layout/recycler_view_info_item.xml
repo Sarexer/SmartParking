@@ -13,21 +13,40 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btn_start_park"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:text="Паркуюсь" />
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/btn_near"
+            android:text="Паркуюсь"
+            android:textColor="@android:color/white" />
 
         <Button
             android:id="@+id/btn_another_park"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Выбрать другую"
 
-            />
+            android:background="@drawable/btn_near"
+            android:text="Выбрать другую"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btn_to_book"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+
+            android:layout_weight="1"
+            android:background="@drawable/btn_near"
+            android:text="Забронировать"
+            android:textColor="@android:color/white" />
+
     </LinearLayout>
 </LinearLayout>

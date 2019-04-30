@@ -68,6 +68,7 @@ public class MapsActivity extends FragmentActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -177,12 +178,14 @@ public class MapsActivity extends FragmentActivity{
 
                         googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(47.202250, 38.935954)));
 
-                        CameraPosition cameraPosition = new CameraPosition.Builder()
-                                .target(new LatLng(location.getLatitude(),location.getLongitude()))
-                                .zoom(18)
-                                .build();
-                        CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-                        mMap.animateCamera(cameraUpdate);
+                        if(location != null){
+                            CameraPosition cameraPosition = new CameraPosition.Builder()
+                                    .target(new LatLng(location.getLatitude(),location.getLongitude()))
+                                    .zoom(17)
+                                    .build();
+                            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                            mMap.animateCamera(cameraUpdate);
+                        }
 
 
                     });
@@ -197,7 +200,7 @@ public class MapsActivity extends FragmentActivity{
 
 
 
-        Observable.just(true).timer(120, TimeUnit.SECONDS).repeatWhen(t -> t.delay(3, TimeUnit.SECONDS)).subscribe(b -> {
+        Observable.just(true).repeatWhen(t -> t.delay(3, TimeUnit.SECONDS)).debounce(3, TimeUnit.SECONDS).subscribe(b -> {
             RestService getService1 = retrofit.create(RestService.class);
             Call<Object> call1 = getService1.get();
             call1.enqueue(new Callback<Object>() {
@@ -256,7 +259,7 @@ public class MapsActivity extends FragmentActivity{
     }
 
     public void onClickBtn(View view) {
-        GeoHash currentHash = GeoHash.fromLocation(location);
+        //GeoHash currentHash = GeoHash.fromLocation(location);
 
         Location park1 = new Location("geohash");
         park1.setLatitude(47.202256);
@@ -270,7 +273,7 @@ public class MapsActivity extends FragmentActivity{
         park3.setLatitude(47.202216);
         park3.setLongitude(38.935957);
 
-        String curHash = currentHash.toString().substring(0,4);
+        //String curHash = currentHash.toString().substring(0,4);
         String hash1 = GeoHash.fromLocation(park1).toString().substring(0,4);
         String hash2 = GeoHash.fromLocation(park2).toString().substring(0,4);
         String hash3 = GeoHash.fromLocation(park3).toString().substring(0,4);
