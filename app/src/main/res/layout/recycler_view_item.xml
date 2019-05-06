@@ -63,6 +63,6 @@
         android:background="@drawable/btn_near"
         android:gravity="center"
         android:text="Посмотреть"
-        android:visibility="gone"
+        android:visibility="visible"
         android:textColor="@android:color/white" />
 </LinearLayout>
