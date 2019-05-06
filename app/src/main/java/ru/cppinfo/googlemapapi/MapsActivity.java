@@ -294,6 +294,8 @@ public class MapsActivity extends FragmentActivity{
         ParkPlace parkPlace1 = new ParkPlace(1, 2,1);
         ParkPlace parkPlace2 = new ParkPlace(2, 5,1);
         ParkPlace parkPlace3 = new ParkPlace(3, 0,1);
+        ParkPlace parkPlace4 = new ParkPlace(4, 0,1);
+
 
         if(!stat1){
             places.add(parkPlace1);
@@ -304,6 +306,7 @@ public class MapsActivity extends FragmentActivity{
         if(!stat3){
             places.add(parkPlace3);
         }
+        places.add(parkPlace4);
 
 
 
@@ -330,6 +333,7 @@ public class MapsActivity extends FragmentActivity{
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setItemAnimator(itemAnimator);
+
 
         llBottomSheet.setVisibility(View.VISIBLE);
 
