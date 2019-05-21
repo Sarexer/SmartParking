@@ -41,7 +41,7 @@ public class ParkAdapter extends RecyclerView.Adapter<ViewHolder> {
     static public List<ParkPlace> savePlacesList;
     GoogleMap map;
     Context context;
-    boolean f = false;
+
     LocationManager mLocationManager;
     Location myLocation;
 

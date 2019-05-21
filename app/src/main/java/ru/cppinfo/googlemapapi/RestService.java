@@ -23,7 +23,7 @@ public interface RestService {
 */
     //сервер
     Retrofit retrofit = new Retrofit.Builder()
-            .baseUrl("http://185.43.4.38:3349")
+            .baseUrl("http://185.146.157.97:3349")
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 }
