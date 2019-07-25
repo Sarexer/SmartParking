@@ -1,15 +1,21 @@
-package ru.cppinfo.googlemapapi;
+package ru.cppinfo.googlemapapi.model;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by shaka on 18.05.2019.
  */
-public class ParkingPlace implements RowType{
+public class ParkingPlace{
+    @SerializedName("latitude")
+    @Expose
     private double latitude;
+    @SerializedName("longitude")
+    @Expose
     private double longitude;
+    @SerializedName("status")
+    @Expose
     private boolean status;
-    private String street;
-    private int people;
-    private int distance;
 
     public ParkingPlace(double latitude, double longitude, boolean status) {
         this.latitude = latitude;
@@ -41,27 +47,4 @@ public class ParkingPlace implements RowType{
         this.status = status;
     }
 
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public int getPeople() {
-        return people;
-    }
-
-    public void setPeople(int people) {
-        this.people = people;
-    }
-
-    public int getDistance() {
-        return distance;
-    }
-
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
 }

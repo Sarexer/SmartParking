@@ -1,17 +1,10 @@
-package ru.cppinfo.googlemapapi;
+package ru.cppinfo.googlemapapi.ui.adapter;
 
-import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.net.Uri;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,28 +19,28 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.johnnylambada.location.LocationProvider;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static android.content.Context.LOCATION_SERVICE;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
+import ru.cppinfo.googlemapapi.R;
+import ru.cppinfo.googlemapapi.model.Parking;
 
 public class Adapter extends RecyclerView.Adapter {
 
     public ArrayList<RowType> dataSet;
     public ArrayList<RowType> savedDataSet;
     public GoogleMap map;
-    public Context context;
-    LocationManager mLocationManager;
-    Location myLocation;
+    public Activity context;
+    LocationProvider locationProvider;
+
+    private int status = 0;
 
 
-    public Adapter(ArrayList<RowType> dataSet, GoogleMap map, Context context) {
+    public Adapter(ArrayList<RowType> dataSet, GoogleMap map, Activity context) {
         this.dataSet = dataSet;
         this.map = map;
         this.context = context;
@@ -55,10 +48,12 @@ public class Adapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if (dataSet.get(position) instanceof ParkingPlace) {
+        if (dataSet.get(position) instanceof Parking) {
             return RowType.ITEM_TYPE;
         } else if (dataSet.get(position) instanceof ItemInfoRowType) {
             return RowType.ITEM_INFO_TYPE;
+        }else if(dataSet.get(position) instanceof ItemDividerRowType){
+            return RowType.ITEM_DIVIDER_TYPE;
         } else {
             return -1;
         }
@@ -77,6 +72,10 @@ public class Adapter extends RecyclerView.Adapter {
                 View itemInfoView = LayoutInflater.from(context)
                         .inflate(R.layout.recycler_view_info_item, parent, false);
                 return new ItemInfoViewHolder(itemInfoView);
+            case RowType.ITEM_DIVIDER_TYPE:
+                View itemDividerView = LayoutInflater.from(context)
+                        .inflate(R.layout.recycler_view_divider_item, parent, false);
+                return new ItemDividerViewHolder(itemDividerView);
             default:
                 return null;
 
@@ -87,28 +86,16 @@ public class Adapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
 
-            ParkingPlace place = (ParkingPlace) dataSet.get(position);
+            Parking parking = (Parking) dataSet.get(position);
 
-            ((ItemViewHolder) holder).txtParkNum.setText("Парковочное место 1");
-            ((ItemViewHolder) holder).txtStreet.setText(place.getStreet());
-            ((ItemViewHolder) holder).txtPeople.setText("Хотят припарковаться: " + place.getPeople());
-            ((ItemViewHolder) holder).txtDistance.setText(place.getDistance() + "м");
-
-            /*boolean find = false;
-            for (RowType row : dataSet) {
-                if (row instanceof ItemInfoRowType) {
-                    find = true;
-                    break;
-                }
-            }
-            if (((ItemViewHolder) holder).btnShow.getVisibility() == VISIBLE) {
-                ((ItemViewHolder) holder).btnShow.setVisibility(GONE);
-            }
-            if (!find) {
-                ((ItemViewHolder) holder).btnShow.setVisibility(VISIBLE);
-            }*/
+            ((ItemViewHolder) holder).txtParkNum.setText("Придорожная парковка "+parking.getNumber());
+            ((ItemViewHolder) holder).txtStreet.setText(parking.getAddress());
+            ((ItemViewHolder) holder).txtPeople.setText("Хотят припарковаться: " + parking.getPeoples());
+            ((ItemViewHolder) holder).txtDistance.setText(parking.getDistance() + "м");
 
         } else if (holder instanceof ItemInfoViewHolder) {
+
+        }else if(holder instanceof ItemDividerViewHolder){
 
         }
     }
@@ -143,23 +130,28 @@ public class Adapter extends RecyclerView.Adapter {
 
         private View.OnClickListener getBtnShowListener() {
             return v -> {
-                ParkingPlace place = (ParkingPlace) dataSet.get(getAdapterPosition());
-                ItemInfoRowType itemInfo = new ItemInfoRowType();
+                if(status == 0){
+                    Parking parking = (Parking) dataSet.get(getAdapterPosition());
+                    ItemInfoRowType itemInfo = new ItemInfoRowType();
 
-                savedDataSet = dataSet;
+                    savedDataSet = new ArrayList<>();
+                    savedDataSet.addAll(dataSet);
 
-                dataSet.clear();
-                notifyDataSetChanged();
-                dataSet.add(place);
-                dataSet.add(itemInfo);
+                    dataSet.clear();
+                    notifyDataSetChanged();
+                    dataSet.add(parking);
+                    dataSet.add(itemInfo);
 
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(place.getLatitude(), place.getLongitude()))
-                        .zoom(20)
-                        .build();
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-                map.animateCamera(cameraUpdate);
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(parking.getLatitude(), parking.getLongitude()))
+                            .zoom(19)
+                            .build();
+                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
+                    map.animateCamera(cameraUpdate);
+
+                    status = 1;
+                }
             };
         }
     }
@@ -183,18 +175,29 @@ public class Adapter extends RecyclerView.Adapter {
         private View.OnClickListener getBtnStartParkListener() {
             return v -> {
 
-                double adressLat = 0;
-                double adressLong = 0;
 
 
-                ParkingPlace place = (ParkingPlace) dataSet.get(0);
-                adressLat = place.getLatitude();
-                adressLong = place.getLongitude();
+
+                Parking parking = (Parking) dataSet.get(0);
+                final double adressLat = parking.getLatitude();
+                final double adressLong = parking.getLongitude();
+
+                locationProvider = new LocationProvider.Builder(context)
+                        .locationObserver(location -> {
+                            locationProvider.stopTrackingLocation();
+                            String uri = "http://maps.google.com/maps?saddr=" + location.getLatitude() + "," + location.getLongitude() + "&daddr=" + adressLat + "," + adressLong;
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                            context.startActivity(intent);
+                        })
+                        .onPermissionDeniedFirstTime(() -> {
+
+                        })
+                        .onPermissionDeniedAgain(() -> {})
+                        .onPermissionDeniedForever(() -> {})
+                        .build();
+                locationProvider.startTrackingLocation();
 
 
-                String uri = "http://maps.google.com/maps?saddr=" + myLocation.getLatitude() + "," + myLocation.getLongitude() + "&daddr=" + adressLat + "," + adressLong;
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-                context.startActivity(intent);
 
             };
         }
@@ -202,8 +205,11 @@ public class Adapter extends RecyclerView.Adapter {
         private View.OnClickListener getBtnChooseAnotherListener(){
             return v -> {
                 dataSet.clear();
+                notifyItemRangeRemoved(0,2);
+                Log.i("curr", savedDataSet.toString());
                 dataSet.addAll(savedDataSet);
-                notifyDataSetChanged();
+
+                status = 0;
             };
         }
 
@@ -238,38 +244,10 @@ public class Adapter extends RecyclerView.Adapter {
         }
     }
 
-    private int checkSelfPermission(String accessFineLocation) {
-        return 0;
-    }
+    public class ItemDividerViewHolder extends RecyclerView.ViewHolder{
 
-    private Location getLastKnownLocation() {
-        mLocationManager = (LocationManager) context.getSystemService(LOCATION_SERVICE);
-        List<String> providers = mLocationManager.getProviders(true);
-        Location bestLocation = null;
-        for (String provider : providers) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    Activity#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for Activity#requestPermissions for more details.
-                return null;
-            }
-            Location l = mLocationManager.getLastKnownLocation(provider);
-            if (l == null) {
-                continue;
-            }
-            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
-                // Found best last known location: %s", l);
-                bestLocation = l;
-            }
+        public ItemDividerViewHolder(@NonNull View itemView) {
+            super(itemView);
         }
-        return bestLocation;
     }
-
-
-
-
 }

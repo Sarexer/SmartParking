@@ -17,7 +17,7 @@
             map:uiCompass="true"
             map:uiZoomControls="true"
 
-            tools:context=".MapsActivity" />
+            tools:context=".ui.MapsActivity" />
 
         <Button
             android:id="@+id/btn_find_near"
@@ -27,7 +27,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/btn_near"
             android:onClick="onClickBtn"
-            android:text="Парковки рядом"
+            android:text="парковки рядом"
             android:textColor="@android:color/white" />
     </FrameLayout>
     <include layout="@layout/bottom_sheet_layout"/>

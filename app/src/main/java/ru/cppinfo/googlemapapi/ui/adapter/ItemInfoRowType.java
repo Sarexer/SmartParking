@@ -1,4 +1,4 @@
-package ru.cppinfo.googlemapapi;
+package ru.cppinfo.googlemapapi.ui.adapter;
 
 public class ItemInfoRowType implements RowType {
 
